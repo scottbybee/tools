@@ -85,7 +85,19 @@ def exit():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   if request.method=='POST':
-    return render_template('usersList.html')
+    username=request.form.username
+    password=request.form.password
+    currentHash=hashlib.md5(str(password).encode('utf-8')+app.config['SALT']).hexdigest()
+    cur=userConn.cursor()
+    query="Select * from user where username = ? "
+    cur.execute(query,[username])
+    rows = cur.fetchall()
+    row=rows[0]
+    print('loginrow: '+row)
+    if row['hash']== currentHash:
+      return render_template('usersList.html')
+    else:
+      redirect('/index')  
   else:
     userConn.row_factory = sqlite3.Row
     cur = userConn.cursor()
@@ -149,10 +161,8 @@ def not_found_error(error):
 #    return render_template('replaceMe.html')
 #
 
-
 ############
 ##  todo  ##
 ############
 #look on github for a flask template or skeleton
 #build a secure version from the skeleton
-
