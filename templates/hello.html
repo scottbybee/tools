@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Hello{% endblock %}
+
+{% block page_header %}
+  <h3> insert breadcrumbs here </h3>
+{% endblock %}
+
+{% block content %}
+  {% if name %}
+    <h1>Hello {{ name }}!</h1>
+  {% else %}
+    <h1>Hello, World!</h1>
+  {% endif %}
+
+	<p>"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."</p>
+	<p>"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."</p>
+
+{% endblock %}
+
+{% block page_footer %}
+  <h3> insert copyright and legalize  here </h3>
+{% endblock %}

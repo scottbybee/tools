@@ -1,0 +1,42 @@
+{% extends "appBase.html" %}
+
+{% block title %}Register - {% endblock %}
+
+{% block page_header %}
+  <h3>--register--</h3>
+{% endblock %}
+
+{% block content %}
+  {% if request.method=='GET' %}
+    <form action="/register" method="POST">
+      <div class="container">
+        <label for="username"><b>username</b></label>
+        <input type="text" placeholder="enter username" name="username" required><br />
+        <label for="password"><b>password</b></label>
+        <input type="password" placeholder="enter password" name="password" required><br /> 
+        <label for="email"><b>emaill</b></label>
+        <input type="text" placeholder="enter email" name="email" required><br /> 
+        <button type="submit">register</button>
+        <br />
+        <!-- <label> <input type="checkbox" checked="checked" name="remember">remember me</label> -->
+      </div>
+	
+      <div class="container" style="background-color:#f1f1f1">
+        <button type="button" class="cancelbtn">cancel</button>
+        <!--<span class="psw">Forgot <a href="#">password?</a></span>-->
+      </div>
+    </form>  
+
+  {% else %}
+    This is where the registration form data is processed<br />
+    Adding SALT to user <br />
+    Creating HASH... <br />
+    Inserting info into users database...
+
+  {% endif %}
+
+{% endblock %}
+
+{% block page_footer %}
+  <h5>Register</h5>
+{% endblock %}

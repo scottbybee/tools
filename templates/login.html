@@ -1,0 +1,27 @@
+{% extends "appBase.html" %}
+
+{% block title %}Login - {% endblock %}
+
+{% block page_header %}
+  <h3>--login--</h3>
+{% endblock %}
+
+{% block content %}
+  {% if request.method=='GET' %}
+    <form action="/login" method="POST">
+    <label>username: </label>
+    <input type="text" placeholder="enter username" name="username" required ></input>
+    <label>password: </password>
+    <input type="text" placeholder="enter password" name="password" required></input>
+    <button type="submit">login</button>
+    </form>
+  {% else %}
+    <h5>in the POST method here</h5><br />
+    <h5>process the form data and log us in</h5>
+  {% endif %}
+
+{% endblock %}
+
+{% block page_footer %}
+  <h5>Login</h5>
+{% endblock %}

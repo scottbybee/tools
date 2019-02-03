@@ -1,0 +1,28 @@
+{% extends "appBase.html" %}
+<!--this is the main form. It contains the blocks below. -->
+
+{% block title %}User List{% endblock %}  
+<!--page title (in browser tab) -->
+
+{% block page_header %}
+<!--insert nav breadcrumbs, somewhat inaccurately -->
+  template header<br />
+  <h5> ><a href="http://192.168.2.26:5000/">home</a>
+       > <a href="http://192.168.2.26:5000/login">login</a> 
+       > ERROR
+  </h5>
+{% endblock %}
+<!--inserted into header -->
+
+{% block content %}
+  <h4>500 error</h4>
+{% endblock %}
+<!-- main content obviously-->
+
+
+{% block page_footer %}
+template footer<br />
+500 error
+{% endblock %}
+<!-- inserted into footer -->
+

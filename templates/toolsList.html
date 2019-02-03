@@ -1,0 +1,35 @@
+{% extends "appBase.html" %}
+
+{% block title %}tools list{% endblock %}
+
+{% block page_header %}
+  <h3> ><a href="http://192.168.2.26:5000/">home</a>
+       > <a href="http://192.168.2.26:5000/tools">tools</a> 
+       > {{ session['PAGE'] }} <!-- change the "breadcrumbs" with this session var; refactor to nav or sumtin'-->
+  </h3>
+{% endblock %}
+
+{% block content %}
+
+
+  <h4>pubs tools list</h4>
+  <table class="table-bordered table-active">
+  <thead><th>name</th><th>descritption</th><th>status</th><th>owner</th></thead>
+
+
+  {% for row in session['ROWS'] %} 
+    <tr><td>{{row["name"]}}</td>
+    <td>{{row["description"]}}</td>
+    <td>{{session['STATUS'][row["status"]-1]["name"]}}</td>
+    <td>{{session['OWNERS'][row["owner"]-1]["username"]}}</td>
+    </tr>
+  {% endfor %}
+  </table>
+  {% endblock %}
+
+
+
+{% block page_footer %}
+	toolsList - footer
+{% endblock %}
+

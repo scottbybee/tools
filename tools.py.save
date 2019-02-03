@@ -1,0 +1,87 @@
+from flask import render_template
+from flask import request
+from flask import g 
+import sqlite3
+from flask import Flask
+import hashlib
+app = Flask(__name__)
+
+conn = sqlite3.connect('toolshare.db')
+print ("Open database successfully");
+
+@app.route('/')
+def root():
+  return render_template('appBase.html')
+  #"Welcome to the PUBS Tool Share!"
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+  if request.method=='POST':
+    username=request.form['username']
+    password=request.form['password'].encode('utf-8')
+    hash = hashlib.md5(password).hexdigest()
+    return render_template("register.html", username = username, hash = hash)
+  else: 
+    return render_template("register.html")
+
+@app.route('/goodbye')
+def exit():
+  # eventually, add cleanup here
+  return "Goodbye cruel world!"
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+  return show_the_login_form()
+##render_template('login.html')
+
+def loginOLD():
+    if request.method == 'POST':
+        return do_the_login()
+    else:
+        return show_the_login_form()
+
+def do_the_login():
+  # process  the login here
+  return "doing the login..."
+
+def show_the_login_form():
+  #login form goes here
+  # - add the little "leds" for the group and username here
+  #also, use email for username and validate before login.
+  # return render_template('login_form.html')
+
+  con = sqlite3.connect("toolshare.db")
+  con.row_factory = sqlite3.Row
+  
+  cur = con.cursor()
+  cur.execute("select * from users")
+   
+  rows = cur.fetchall(); 
+  return render_template('usersList.html', rows = rows)
+
+def get_db():
+  """Opens a new database connnection for current application context"""
+  if not hasattr(g, "sqlite_db"):
+    g.sqlite_db = connect_db()
+  return g.sqlite_db
+
+@app.teardown_appcontext
+def close_db(error):
+  """closes the db connection at the end of the request"""
+  if hasattr(g, "sqlite_db"):
+    g.sqlite_db.close()
+ 
+
+@app.route('/hello/')
+@app.route('/hello/<name>')
+def hello(name=None):
+    return render_template('hello.html', name=name)
+
+
+@app.route('/tools/')
+def tools():
+  return render_template('tools.html')
+
+@app.route('/tools/list')
+def toolsList():
+  return render_template('toolsList.html')

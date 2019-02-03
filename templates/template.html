@@ -1,0 +1,34 @@
+{% extends "appBase.html" %}
+<!--this is the main form. It contains the blocks below. -->
+
+{% block title %}User List{% endblock %}  
+<!--page title (in browser tab) -->
+
+{% block page_header %}
+<!--insert nav breadcrumbs, somewhat inaccurately -->
+  template header<br />
+  <h5> ><a href="http://192.168.2.26:5000/">home</a>
+       > <a href="http://192.168.2.26:5000/login">login</a> 
+       > usersList
+  </h5>
+{% endblock %}
+<!--inserted into header -->
+
+{% block content %}
+  <h4>users list</h4>
+  <table border = 1>
+  <thead><td>id</td><td>username</td><td>hash</td><td>email</td></thead>
+{% for row in rows %} <!-- "rows" is a resultset passed in the render_template function -->
+  <tr><td>{{row["id"]}}</td><td>{{row["username"]}}</td><td>{{row["password"]}}</td><td>{{row["email"]}}</td></tr>
+{% endfor %}
+</table>
+{% endblock %}
+<!-- main content obviously-->
+
+
+{% block page_footer %}
+template footer<br />
+usersList - footer
+{% endblock %}
+<!-- inserted into footer -->
+

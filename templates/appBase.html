@@ -1,0 +1,69 @@
+{# comments
+  to do: 
+    done 1 - add bootstrap script and css
+    2 - add bootstrap theme
+    done 3 - create a second block in hello
+    done 4 - create a multi-div page with head, foot, nav, & content divs
+    5 - add a block here that is rendered from the child page vai {{ super() }} 
+#}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <!-- Required  (for bootstrap) meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" integrity="sha384-PmY9l28YgO4JwMKbTvgaS7XNZJ30MK9FAZjjzXtlqyZCqBY6X6bXIkM++IkyinN+" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap-theme.min.css" integrity="sha384-jzngWsPS6op3fgRCDTESqrEJwRKck+CILhJVO5VvaAZCq8JYf8HsR/HPpBOOPZfR" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js" integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18Nw" crossorigin="anonymous"></script>
+
+    <title>{% block title %}{% endblock %}PUBS Toolshare</title>
+    {% endblock %}
+  </head>
+  <body>
+    <div class="container" id="header">
+      <h5>PoorUglyBikers Toolshare</h5><br />
+      <br />{% block page_header %}<br />
+        <a href="http://192.168.2.26:5000/login">Login</a><br />
+	<br />
+        <a href="http://192.168.2.26:5000/register">Not a Member? - Register</a><br />
+	<br />
+        <a href="http://192.168.2.26:5000/">Home</a><br />
+
+      {% endblock %}
+    </div>
+    <div class="container" id="content">
+      {% block content %}{% endblock %}
+    </div>
+
+
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted">
+          <br />
+	  <h5><a href="http://192.168.2.26:5000/">Home</a></h5>
+	  <br />{% block page_footer %}{% endblock %}<br />
+	  <br />
+	  Copyright SEB 2018-2019
+        </span>
+      </div>
+    </footer>
+
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  </body>
+</html>
+
+
+
+

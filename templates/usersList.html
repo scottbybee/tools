@@ -1,0 +1,27 @@
+{% extends "appBase.html" %}
+
+{% block title %}Users{% endblock %}
+
+{% block page_header %}
+  <h3> ><a href="http://192.168.2.26:5000/">home</a>
+       > <a href="http://192.168.2.26:5000/login">login</a> 
+       > usersList
+  </h3>
+{% endblock %}
+
+{% block content %}
+  <h4>PUBS Users List</h4>
+  <table border = 1>
+  <thead><td>Username</td><td>Hash</td></thead>
+
+{% for row in rows %}
+  <tr><td>{{row["username"]}}</td><td>{{row["password"]}}</td></tr>
+{% endfor %}
+</table>
+{% endblock %}
+
+
+{% block page_footer %}
+	usersList - footer
+{% endblock %}
+
