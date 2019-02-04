@@ -62,6 +62,8 @@ def register():
     password=request.form['password']
     email=request.form['email']
     hash = hashlib.md5(str(password).encode('utf-8')+app.config['SALT']).hexdigest()
+    print(hash)
+    print(app.config['SALT'])
     #insert query
     #query = "insert into user (username, password, email) values (?, ?, ?)"
     #params = [username, hash, email]
@@ -86,14 +88,20 @@ def exit():
 def login():
   if request.method=='POST':
     username=request.form['username']
+    print("username: "+username)
     password=request.form['password']
+    print ("password: "+password)
     currentHash=hashlib.md5(str(password).encode('utf-8')+app.config['SALT']).hexdigest()
+    print(app.config['SALT'])
+
+    print("chash: "+currentHash)
     cur=userConn.cursor()
     query="Select * from user where username = ? "
     cur.execute(query,[username])
     rows = cur.fetchall()
     row=rows[0]
-    print('loginrow: '+row)
+    print('loginrow: '+str(row))
+    print("hash: "+row['password'])
     if row['password']== currentHash:
       print("success")
       return render_template('login.html') #was userList
