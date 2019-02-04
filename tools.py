@@ -85,8 +85,8 @@ def exit():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   if request.method=='POST':
-    username=request.form.username
-    password=request.form.password
+    username=request.form['username']
+    password=request.form['password']
     currentHash=hashlib.md5(str(password).encode('utf-8')+app.config['SALT']).hexdigest()
     cur=userConn.cursor()
     query="Select * from user where username = ? "
@@ -95,15 +95,17 @@ def login():
     row=rows[0]
     print('loginrow: '+row)
     if row['hash']== currentHash:
-      return render_template('usersList.html')
+      print("success")
+      return render_template('login.html') #was userList
     else:
-      redirect('/index')  
+      print("failure")
+      redirect('/index') #check syntax  
   else:
     userConn.row_factory = sqlite3.Row
     cur = userConn.cursor()
     cur.execute("select * from user")
     rows = cur.fetchall();
-    return render_template('template.html', rows = rows)
+    return render_template('login.html', rows = rows)
  
 @app.route('/tools/', methods=['GET','POST'])
 def tools():
