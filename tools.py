@@ -94,7 +94,7 @@ def login():
     rows = cur.fetchall()
     row=rows[0]
     print('loginrow: '+row)
-    if row['hash']== currentHash:
+    if row['password']== currentHash:
       print("success")
       return render_template('login.html') #was userList
     else:
