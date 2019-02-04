@@ -9,7 +9,6 @@ toolConn= sqlite3.connect('db/tool.db')
 userConn = sqlite3.connect('db/user.db')
 #xactionConn= sqlite3.connect('db/xaction.db')
 #*Conn persists; no need to open elsewhere
-#print ("Open databases successfully");
 
 #I don't intend to do a lot of joins even tho I use lots of tables
 #What I intend to do instead is to run multiple queries and pass the results via the session 
@@ -62,14 +61,7 @@ def register():
     password=request.form['password']
     email=request.form['email']
     hash = hashlib.md5(str(password).encode('utf-8')+app.config['SALT']).hexdigest()
-    print(hash)
-    print(app.config['SALT'])
-    #insert query
-    #query = "insert into user (username, password, email) values (?, ?, ?)"
-    #params = [username, hash, email]
-    #print(params)
     cur = userConn.cursor()
-    #cur.execute(query, params)
     cur.execute("insert into user (username, password, email) values (?, ?, ?)", [username, hash, email])
     userConn.commit()
     return render_template("register.html")
@@ -88,26 +80,16 @@ def exit():
 def login():
   if request.method=='POST':
     username=request.form['username']
-    print("username: "+username)
     password=request.form['password']
-    print ("password: "+password)
     currentHash=hashlib.md5(str(password).encode('utf-8')+app.config['SALT']).hexdigest()
-    print(app.config['SALT'])
-
-    print("chash: "+currentHash)
     cur=userConn.cursor()
-    query="Select * from user where username = ? "
-    cur.execute(query,[username])
+    cur.execute("Select * from user where username = ? ",[username])
     rows = cur.fetchall()
     row=rows[0]
-    print('loginrow: '+str(row))
-    print("hash: "+row['password'])
     if row['password']== currentHash:
-      print("success")
       return render_template('login.html') #was userList
     else:
-      print("failure")
-      redirect('/index') #check syntax  
+      redirect('/') #check syntax  
   else:
     userConn.row_factory = sqlite3.Row
     cur = userConn.cursor()
@@ -122,7 +104,6 @@ def tools():
     cur = toolConn.cursor()
     cur.execute("select * from tool")
     rows = cur.fetchall();
-    print(convert_results(rows))
     session['ROWS']=convert_results(rows)
     session['STATUS']=get_status()
     session['OWNERS']=get_owners()
@@ -147,7 +128,6 @@ def mytools():
     session['STATUS']=get_status()
     session['OWNERS']=get_owners()
     session['PAGE']="My Tools List"
-    print(session)
     return render_template('toolsList.html')
   else:
     return render_method('tools.html')
@@ -176,3 +156,13 @@ def not_found_error(error):
 ############
 #look on github for a flask template or skeleton
 #build a secure version from the skeleton
+
+#0-refactor so password refers to passwords and hashes are hashes
+#1-add code to session and/or app.config to represnt the logged-in status of the user
+#prolly the user row plus logged-in=TRUE
+#2-Expand the data in the register form and clean up the databbase.
+#3-move salt toa config file that is secure and outside the scope of the web app
+#so it needs to go in the file that runs on boot (in server mode)
+#4-make a user edit page
+#5-make a tools crud page; this should be "home" once logged in. 
+#  list the tools in a table w/ scroll bars (make a user/tool (many-to-many) lookup table) 
