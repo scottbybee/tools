@@ -1,15 +1,19 @@
 from flask import Flask, render_template, request, session
 import sqlite3
 import hashlib
+import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY']="thisIsATest" #move this to a secret location at some point
+#app.config['SECRET_KEY']="thisIsATest" #move this to a secret location at some point
+app.config['SECRET_KEY']=os.getenv('SALT')
+
+print(app.config['SECRET_KEY'])
+
 app.config['SALT']=str(hashlib.sha256(app.config['SECRET_KEY'].encode('utf-8')).hexdigest()).encode('utf-8')
 toolConn= sqlite3.connect('db/tool.db')
 userConn = sqlite3.connect('db/user.db')
 #xactionConn= sqlite3.connect('db/xaction.db')
 #*Conn persists; no need to open elsewhere
-#print ("Open databases successfully");
 
 #I don't intend to do a lot of joins even tho I use lots of tables
 #What I intend to do instead is to run multiple queries and pass the results via the session 
@@ -61,14 +65,12 @@ def register():
     username=request.form['username']
     password=request.form['password']
     email=request.form['email']
+    #PREFERRED CONTACT METHOD AND ID
+    contactMethod=request.form['contactMethod']
+    contact=request.form['contact']
     hash = hashlib.md5(str(password).encode('utf-8')+app.config['SALT']).hexdigest()
-    #insert query
-    #query = "insert into user (username, password, email) values (?, ?, ?)"
-    #params = [username, hash, email]
-    #print(params)
     cur = userConn.cursor()
-    #cur.execute(query, params)
-    cur.execute("insert into user (username, password, email) values (?, ?, ?)", [username, hash, email])
+    cur.execute("insert into user (username, hash, email, contactMethod, contact) values (?, ?, ?, ?, ?)", [username, hash, email, contactMethod, contact])
     userConn.commit()
     return render_template("register.html")
   else: 
@@ -85,13 +87,26 @@ def exit():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   if request.method=='POST':
-    return render_template('usersList.html')
+    username=request.form['username']
+    password=request.form['password']
+    currentHash=hashlib.md5(str(password).encode('utf-8')+app.config['SALT']).hexdigest()
+    cur=userConn.cursor()
+    cur.execute("Select * from user where username = ? ",[username])
+    rows = cur.fetchall()
+    row=rows[0]
+    if row['hash']== currentHash:
+      session['USER']=username
+      session['USER_STATUS']="LOGGED_IN"
+      print(session['USER_STATUS'])
+      return render_template('login.html') #was userList
+    else:
+      redirect('/') #check syntax  
   else:
     userConn.row_factory = sqlite3.Row
     cur = userConn.cursor()
     cur.execute("select * from user")
     rows = cur.fetchall();
-    return render_template('template.html', rows = rows)
+    return render_template('login.html', rows = rows)
  
 @app.route('/tools/', methods=['GET','POST'])
 def tools():
@@ -100,7 +115,6 @@ def tools():
     cur = toolConn.cursor()
     cur.execute("select * from tool")
     rows = cur.fetchall();
-    print(convert_results(rows))
     session['ROWS']=convert_results(rows)
     session['STATUS']=get_status()
     session['OWNERS']=get_owners()
@@ -125,7 +139,6 @@ def mytools():
     session['STATUS']=get_status()
     session['OWNERS']=get_owners()
     session['PAGE']="My Tools List"
-    print(session)
     return render_template('toolsList.html')
   else:
     return render_method('tools.html')
@@ -149,10 +162,17 @@ def not_found_error(error):
 #    return render_template('replaceMe.html')
 #
 
-
 ############
 ##  todo  ##
 ############
 #look on github for a flask template or skeleton
 #build a secure version from the skeleton
 
+#DONE! 0-refactor so password refers to passwords and hashes are hashes
+#DONE! 1-add code to session['USER_STATUS']to represnt the logged-in status of the user
+#DONE! 2-Expand the data in the register form and clean up the databbase.
+#DONE! 3-move salt toa config file that is secure and outside the scope of the web app
+#so it needs to go in the file that runs on boot (in server mode - /etc/profile)
+#4-make a user edit page
+#5-make a tools crud page; this should be "home" once logged in. 
+#  list the tools in a table w/ scroll bars (make a user/tool (many-to-many) lookup table) 
