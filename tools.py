@@ -4,11 +4,7 @@ import hashlib
 import os
 
 app = Flask(__name__)
-#app.config['SECRET_KEY']="thisIsATest" #move this to a secret location at some point
 app.config['SECRET_KEY']=os.getenv('SALT')
-
-print(app.config['SECRET_KEY'])
-
 app.config['SALT']=str(hashlib.sha256(app.config['SECRET_KEY'].encode('utf-8')).hexdigest()).encode('utf-8')
 toolConn= sqlite3.connect('db/tool.db')
 userConn = sqlite3.connect('db/user.db')
@@ -36,7 +32,7 @@ def get_status():
   rows = cur.fetchall();
   d={}
   for row in rows:
-    print(type(row))
+    #print(type(row))
     temp=dict(row)
     d[temp['id']]=temp['name']
   return d
@@ -97,7 +93,6 @@ def login():
     if row['hash']== currentHash:
       session['USER']=username
       session['USER_STATUS']="LOGGED_IN"
-      print(session['USER_STATUS'])
       return render_template('login.html') #was userList
     else:
       redirect('/') #check syntax  
